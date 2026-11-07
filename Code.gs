@@ -1,0 +1,4 @@
+function doGet(e){let f=e&&e.parameter&&e.parameter.page==='admin'?'Admin':'Index';return HtmlService.createTemplateFromFile(f).evaluate().setTitle(APP.NAME).addMetaTag('viewport','width=device-width, initial-scale=1')}
+function include_(n){return HtmlService.createHtmlOutputFromFile(n).getContent()}
+function getPublicConfig(){return{name:setting_('營區名稱',APP.NAME),announcement:setting_('網站公告',''),contact:APP.CONTACT,bank:APP.BANK,areas:APP.AREAS,photos:rows_('Photos').filter(x=>String(x['啟用']).toUpperCase()!=='FALSE').sort((a,b)=>(+a['排序']||0)-(+b['排序']||0))}}
+function lookupOrder(id,last4){let b=rows_('Bookings').find(x=>x['訂單編號']===String(id||'').trim()&&String(x['電話']).slice(-4)===String(last4||'').trim());if(!b)throw Error('查無訂單或電話末四碼不符');return{id:b['訂單編號'],status:b['狀態'],paymentStatus:b['付款狀態'],checkin:dateKey_(b['入住日']),checkout:dateKey_(b['退營日']),area:b['區域'],pitch:b['營位'],total:b['總金額'],due:b['付款期限'],refund:b['退款金額'],refundStatus:b['退款狀態']}}
